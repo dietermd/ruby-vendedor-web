@@ -1,0 +1,68 @@
+<style>
+  .msgErro {
+    font-size: 80%;
+    color: red;
+  }
+</style>
+
+<ion-header>
+  <ion-navbar color="danger">
+    <ion-title>Novo cadastro</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-grid>
+    <ion-row justify-content-center>
+      <ion-col col-md-4>
+        <h2 text-center>Bem vindo ao Ruby!</h2>
+        <form (ngSubmit)="inscrever()" [formGroup]="cadastroFormGroup" margin-vertical>
+          <ion-item>
+            <ion-label>Email: </ion-label>
+            <ion-input type="text" formControlName="email"></ion-input>
+          </ion-item>
+
+          <ion-item no-lines *ngIf="email.invalid && (email.dirty || email.touched)">
+            <div class="msgErro" *ngIf="email.errors?.required">
+              Email é obrigatório.
+            </div>
+            <div class="msgErro" *ngIf="email.errors?.pattern">
+              Email fora do padrão.
+            </div>
+          </ion-item>
+
+
+          <ion-item>
+            <ion-label>Senha: </ion-label>
+            <ion-input type="password" formControlName="senha"></ion-input>
+          </ion-item>
+
+          <ion-item no-lines *ngIf="senha.invalid && (senha.dirty || senha.touched)">
+            <div class="msgErro" *ngIf="senha.errors?.required">
+              Senha é obrigatório.
+            </div>
+            <div class="msgErro" *ngIf="senha.errors?.minlength">
+              Senha deve conter no mínimo 6 caracteres.
+            </div>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>Repita a senha: </ion-label>
+            <ion-input type="password" formControlName="confirmaSenha"></ion-input>
+          </ion-item>
+
+          <ion-item no-lines *ngIf="confirmaSenha.invalid && (confirmaSenha.dirty || confirmaSenha.touched)">
+            <div class="msgErro" *ngIf="confirmaSenha.errors?.required">
+              Repita a senha.
+            </div>
+          </ion-item>
+
+          <div text-center margin-top>
+            <button type="submit" [disabled]="!cadastroFormGroup.valid" ion-button clear>Inscrever-se</button>
+          </div>
+        </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

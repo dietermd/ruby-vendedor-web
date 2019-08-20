@@ -1,0 +1,47 @@
+<ion-header>
+    <ion-navbar color="danger">
+        <ion-title>Login</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+    <ion-grid>
+        <ion-row justify-content-center>
+            <ion-col col-md-4>
+                <ion-card>
+                    <form (ngSubmit)="logar()" [formGroup]="loginFormGroup">
+                        <img src="https://cdn-images-1.medium.com/max/1200/1*9hd_8qR0CMZ8L0pVbFLjDw.png" />
+                        <ion-card-content>
+
+                            <ion-item>
+                                <ion-label>
+                                    <ion-icon name="mail"></ion-icon>
+                                </ion-label>
+                                <ion-input type="text" placeholder="Email" formControlName="email"></ion-input>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label>
+                                    <ion-icon name="lock"></ion-icon>
+                                </ion-label>
+                                <ion-input type="password" placeholder=" Senha" formControlName="senha">
+                                </ion-input>
+                            </ion-item>
+
+                        </ion-card-content>
+                        <ion-grid>
+                            <ion-row text-center>
+                                <ion-col>
+                                    <button ion-button clear (click)="cadastro()" type="button">Inscreva-se</button>
+                                </ion-col>
+                                <ion-col>
+                                    <button ion-button clear type="submit"
+                                        [disabled]="!loginFormGroup.valid">Login</button>
+                                </ion-col>
+                            </ion-row>
+                        </ion-grid>
+                    </form>
+                </ion-card>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>
