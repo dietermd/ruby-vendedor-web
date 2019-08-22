@@ -1,0 +1,10 @@
+<!-- Generated template for the NavbarComponent component -->
+
+<ion-navbar color="danger">
+  <ion-title>{{label}}</ion-title>
+  <ion-buttons end *ngIf="usuarioLogado">
+    <button ion-button icon-only (click)="logout()">
+      <ion-icon name="log-out"></ion-icon>
+    </button>
+  </ion-buttons>
+</ion-navbar>

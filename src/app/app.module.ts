@@ -7,8 +7,8 @@ import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { MyApp } from './app.component';
 
 import { AngularFireModule } from '@angular/fire';
-import { AngularFireDatabaseModule, AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { FIREBASE_CONFIG } from './environments/environment';
 
 import { IonicStorageModule } from '@ionic/storage';
@@ -20,6 +20,10 @@ import { CadastroPage } from '../pages/cadastro/cadastro';
 import { DadosPage } from '../pages/dados/dados';
 import { LocalizacaoPage } from '../pages/localizacao/localizacao';
 
+import { NavbarComponent } from '../components/navbar/navbar';
+import { NavbarPopoverPage } from '../pages/navbar-popover/navbar-popover';
+
+
 @NgModule({
   declarations: [
     MyApp,
@@ -27,14 +31,18 @@ import { LocalizacaoPage } from '../pages/localizacao/localizacao';
     CadastroPage,
     HomePage,
     DadosPage,
-    LocalizacaoPage
+    LocalizacaoPage,
+
+    NavbarComponent,
+    NavbarPopoverPage
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
     AngularFireModule.initializeApp(FIREBASE_CONFIG),
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    AngularFirestoreModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -43,12 +51,13 @@ import { LocalizacaoPage } from '../pages/localizacao/localizacao';
     CadastroPage,
     HomePage,
     DadosPage,
-    LocalizacaoPage
+    LocalizacaoPage,
+
+    NavbarPopoverPage
   ],
   providers: [
     //SplashScreen,
-    //StatusBar,  
-    AngularFireDatabase,
+    //StatusBar,
     Session,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]

@@ -10,9 +10,11 @@ import { LoginPage } from '../login/login';
     templateUrl: 'cadastro.html'
 })
 export class CadastroPage implements OnInit {
+    
+    label: string = "Cadastro";
     private cadastroFormGroup: FormGroup
 
-    constructor(public navCtrl: NavController, private alertCtrl: AlertController, private toastCtrl: ToastController, private afAuth: AngularFireAuth) { }
+    constructor(private navCtrl: NavController, private alertCtrl: AlertController, private toastCtrl: ToastController, private afAuth: AngularFireAuth) { }
 
     ngOnInit() {
         let EMAIL_VALIDATION = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/

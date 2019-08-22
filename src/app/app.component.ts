@@ -3,38 +3,39 @@ import { Platform } from 'ionic-angular';
 //import { StatusBar } from '@ionic-native/status-bar';
 //import { SplashScreen } from '@ionic-native/splash-screen';
 
-import { HomePage } from '../pages/home/home';
+//import { HomePage } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
 import { DadosPage } from '../pages/dados/dados';
- 
 
 import { Session } from './services/session.service';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
-    templateUrl: 'app.html'
+  templateUrl: 'app.html'
 })
 export class MyApp implements OnInit {
-    //rootPage:any = HomePage;
-    rootPage: any;
+  rootPage: any;
 
-    constructor(platform: Platform, private session: Session) {
-        platform.ready().then(() => {
-            // Okay, so the platform is ready and our plugins are available.
-            // Here you can do any higher level native things you might need.
-            //statusBar.styleDefault();
-            //splashScreen.hide();
-        });
-    }
+  constructor(platform: Platform, private session: Session, private db: AngularFirestore) {
+    platform.ready().then(() => {
+      // Okay, so the platform is ready and our plugins are available.
+      // Here you can do any higher level native things you might need.
+      //statusBar.styleDefault();
+      //splashScreen.hide();
+    });    
+  }
 
-    ngOnInit() {
-        this.session.get().then(res => {
-            console.log(res);
-            if (res === null) {
-                this.rootPage = LoginPage;
-            } else {
-                this.rootPage = DadosPage;
-            }
-        });
-    }
+  ngOnInit() {
+    this.session.get().then(res => {
+      console.log(res);      
+      if (res === null) {
+        this.rootPage = LoginPage;
+      } else {
+        this.db.collection('vendedores', ref => ref.where('uid', '==', res.uid))
+          .valueChanges().subscribe(val => console.log(val));
+        this.rootPage = DadosPage;
+      }
+    });
+  }
 }
 

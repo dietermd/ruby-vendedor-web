@@ -9,6 +9,7 @@ import leaflet from 'leaflet';
 
 export class LocalizacaoPage implements OnInit{
 
+  label: string = "Localização";
   @ViewChild('map') mapContainer: ElementRef
   map: any
   private marker: any = leaflet.marker()

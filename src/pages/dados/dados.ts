@@ -14,6 +14,8 @@ import { Usuario } from '../../app/models/usuario.model';
 })
 
 export class DadosPage implements OnInit {
+
+  label: string = "Dados";
   private usuarioLogado: Usuario;
   private dadosFormGroup: FormGroup;
 
