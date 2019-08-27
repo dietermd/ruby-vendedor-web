@@ -5,5 +5,13 @@ export class Model {
 }
 //classe usuario extendendo a classe Model
 export class Usuario extends Model {
-    uid: string;
+    uid?: string;
+    nome?: string;
+
+    dadosCadastrados(): boolean {
+        if(this.nome) {
+            return true;
+        }
+        return false;
+    }
 }

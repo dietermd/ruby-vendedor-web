@@ -9,6 +9,8 @@ import { DadosPage } from '../pages/dados/dados';
 
 import { Session } from './services/session.service';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { HomePage } from '../pages/home/home';
+import { Usuario } from './models/usuario.model';
 
 @Component({
   templateUrl: 'app.html'
@@ -22,18 +24,23 @@ export class MyApp implements OnInit {
       // Here you can do any higher level native things you might need.
       //statusBar.styleDefault();
       //splashScreen.hide();
-    });    
+    });
   }
 
   ngOnInit() {
     this.session.get().then(res => {
-      console.log(res);      
+      console.log(res);
       if (res === null) {
         this.rootPage = LoginPage;
       } else {
-        this.db.collection('vendedores', ref => ref.where('uid', '==', res.uid))
-          .valueChanges().subscribe(val => console.log(val));
-        this.rootPage = DadosPage;
+        this.db.collection('vendedores').doc(res.uid).valueChanges().subscribe(doc => {
+          const usuario: Usuario = new Usuario(doc);
+          if (usuario.dadosCadastrados()) {
+            this.rootPage = HomePage;
+          } else {
+            this.rootPage = DadosPage;
+          }
+        });
       }
     });
   }

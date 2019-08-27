@@ -17,7 +17,7 @@ export class LocalizacaoPage implements OnInit{
   constructor( private navParams: NavParams) {}
 
   ngOnInit() {
-    console.log(this.navParams.get('cnpj'))
+    console.log(this.navParams.get('dadosUsuario'))
   }
 
   ionViewDidEnter() {

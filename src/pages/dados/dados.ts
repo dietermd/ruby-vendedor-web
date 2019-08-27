@@ -41,6 +41,7 @@ export class DadosPage implements OnInit {
   get nomeEstabelecimento() { return this.dadosFormGroup.get('nomeEstabelecimento') }
 
   inserirDados() {
-    this.navCtrl.push(LocalizacaoPage, { nomeResponsvel: this.nomeResponsavel.value, cnpj: this.cnpj.value, nomeEstabelecimento: this.nomeEstabelecimento.value });
+    const dadosUsuario = { dadosUsuario: { nomeResponsavel: this.nomeResponsavel.value, cnpj: this.cnpj.value, nomeEstabelecimento: this.nomeEstabelecimento.value }};
+    this.navCtrl.push(LocalizacaoPage, dadosUsuario);
   }
 }

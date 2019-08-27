@@ -31,31 +31,33 @@ export class CadastroPage implements OnInit {
 
     inscrever() {
         if (this.senha.value !== this.confirmaSenha.value) {
-            const alert = this.alertCtrl.create({
-                title: 'Senhas Diferentes!',
-                subTitle: 'Verifique as senhas',
-                buttons: ['OK']
-            });
-            alert.present()
-            return
+          const alert = this.alertCtrl.create({
+              title: 'Senhas Diferentes!',
+              subTitle: 'Verifique as senhas',
+              buttons: ['OK']
+          });
+          alert.present()
+          return
         }
-        // this.afAuth.auth.createUserWithEmailAndPassword(this.email.value, this.senha.value).then(res => {
-        //   console.log('res')
-        //   const toast = this.toastCtrl.create({
-        //     message: 'Usuário cadastrado com sucesso!',
-        //     duration: 3000,
-        //     position: 'top'
-        //   });
-        //   toast.present();
-        //   this.navCtrl.push(LoginPage);
-        // }).catch(error => { if(error.code === 'auth/email-already-in-use'){
-        //   const alert = this.alertCtrl.create({
-        //     title: 'Email já utilizado',
-        //     subTitle: 'Este email já possui uma conta',
-        //     buttons: ['OK']
-        //   });
-        //   alert.present();      
-        // }});
+        this.afAuth.auth.createUserWithEmailAndPassword(this.email.value, this.senha.value).then(res => {
+          const toast = this.toastCtrl.create({
+            message: 'Usuário cadastrado com sucesso!',
+            duration: 3000,
+            position: 'top'
+          });
+          toast.present();
+          this.navCtrl.push(LoginPage);
+
+        }).catch(error => {
+            if(error.code === 'auth/email-already-in-use') {
+              const alert = this.alertCtrl.create({
+                title: 'Email já utilizado',
+                subTitle: 'Este email já possui uma conta',
+                buttons: ['OK']
+              });
+            alert.present();      
+            }
+          });
         this.navCtrl.push(LoginPage);
     }
 }
