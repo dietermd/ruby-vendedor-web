@@ -9,7 +9,7 @@ import { MyApp } from './app.component';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { FIREBASE_CONFIG } from './environments/environment';
+import { environment } from './environments/environment';
 
 import { IonicStorageModule } from '@ionic/storage';
 import { Session } from './services/session.service';
@@ -40,7 +40,7 @@ import { NavbarPopoverPage } from '../pages/navbar-popover/navbar-popover';
     BrowserModule,
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
-    AngularFireModule.initializeApp(FIREBASE_CONFIG),
+    AngularFireModule.initializeApp(environment.FIREBASE_CONFIG),
     AngularFireAuthModule,
     AngularFirestoreModule
   ],
