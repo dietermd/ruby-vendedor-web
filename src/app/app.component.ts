@@ -29,7 +29,7 @@ export class MyApp implements OnInit {
 
   ngOnInit() {
     this.session.get().then(res => {
-      console.log(res);
+      //console.log(res);
       if (res === null) {
         this.rootPage = LoginPage;
       } else {

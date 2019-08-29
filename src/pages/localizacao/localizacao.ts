@@ -1,7 +1,13 @@
 import { Component, OnInit, ViewChild, ElementRef  } from '@angular/core';
-import { NavParams } from 'ionic-angular'
+import { NavController, NavParams, ToastController } from 'ionic-angular'
+
+import { AngularFirestore } from '@angular/fire/firestore';
+import { Session } from '../../app/services/session.service';
+
+import { HomePage } from '../home/home';
 
 import leaflet from 'leaflet';
+import { Usuario } from '../../app/models/usuario.model';
 
 @Component({
   templateUrl: 'localizacao.html'
@@ -13,36 +19,60 @@ export class LocalizacaoPage implements OnInit{
   @ViewChild('map') mapContainer: ElementRef
   map: any
   private marker: any = leaflet.marker()
+  private dadosUsuario: object;
 
-  constructor( private navParams: NavParams) {}
+  constructor(private navCtrl: NavController, private navParams: NavParams, private toastCtrl: ToastController, private db: AngularFirestore, private session: Session) {}
 
   ngOnInit() {
-    console.log(this.navParams.get('dadosUsuario'))
+    this.dadosUsuario = this.navParams.get('dadosUsuario');
   }
 
   ionViewDidEnter() {
     this.loadmap();
   }
  
+  inserirDados() {
+    const latlng = this.marker.getLatLng();
+    this.dadosUsuario['localizacao'] = latlng.lat + '|' + latlng.lng;
+    this.db.collection('vendedores').doc(this.navParams.get('uid')).set(this.dadosUsuario);
+    let usuarioAtualizado = new Usuario(this.dadosUsuario);
+    usuarioAtualizado.uid = this.navParams.get('uid');
+    this.session.create(usuarioAtualizado);
+    const toast = this.toastCtrl.create({
+      message: 'Novos dados inseridos!',
+      duration: 3000,
+      position: 'top'
+    });
+    toast.present();
+    this.navCtrl.setRoot(HomePage);
+  }
+ 
   loadmap() {
     this.map = leaflet.map("map").fitWorld();
+
     leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attributions: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
       maxZoom: 18
     }).addTo(this.map);
-    this.map.locate({
-      setView: true,
-      maxZoom: 15
-    }).on('locationfound', (e) => {
-      this.marker.setLatLng(this.map.getCenter()).on('click', () => {
-        alert('Marker clicked');
-      })
-      this.marker.addTo(this.map)
+
+    if (this.navParams.get('alterar')) {
+      const latLngArr = this.dadosUsuario['localizacao'].split('|');
+      this.map.setView(latLngArr, 18);
+      this.marker.setLatLng(latLngArr).addTo(this.map);
+    } else {
+      this.map.locate({
+        setView: true,
+        maxZoom: 15
+      }).on('locationfound', (e) => {
+        this.marker.setLatLng(this.map.getCenter()).addTo(this.map);
       }).on('locationerror', (err) => {
         alert(err.message);
-      }).on('move', (e) => {
-        this.marker.setLatLng(this.map.getCenter())
-      })
+      });
+    }
+
+    this.map.on('move', (e) => {
+      this.marker.setLatLng(this.map.getCenter())
+    })
  
   }
 }

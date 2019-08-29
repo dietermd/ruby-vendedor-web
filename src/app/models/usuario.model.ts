@@ -6,10 +6,13 @@ export class Model {
 //classe usuario extendendo a classe Model
 export class Usuario extends Model {
     uid?: string;
-    nome?: string;
+    nomeResponsavel?: string;
+    cnpj?: string;
+    nomeEstabelecimento?: string;
+    localizacao?: string;
 
-    dadosCadastrados(): boolean {
-        if(this.nome) {
+    dadosCadastrados(): boolean {        
+        if(this.nomeResponsavel && this.cnpj && this.nomeEstabelecimento && this.localizacao) {
             return true;
         }
         return false;
