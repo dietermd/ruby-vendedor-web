@@ -1,0 +1,37 @@
+<ion-header>
+  <navbar [label]="label"></navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-grid>
+    <ion-row align-items-center>
+      <ion-col col-10 col-sm-11>
+        <ion-searchbar (ionInput)="filtrarLista($event)"></ion-searchbar>
+      </ion-col>
+      <ion-col col-2 col-sm-1>
+        <button ion-button icon-only full color="danger" style="height: 42px" (click)="inserirProduto()">
+          <ion-icon name="add"></ion-icon>
+        </button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row align-items-center>
+      <ion-col>        
+        <ion-list>
+
+          <ion-item *ngFor="let produto of listaFiltrada" style="cursor: pointer" (click)="alterarProduto(produto.id)">
+            <ion-thumbnail item-start>
+              <img [src]="produto.imagem ? produto.imagem.imagemURL : 'https://image.flaticon.com/icons/svg/138/138241.svg'">
+            </ion-thumbnail>
+            <div text-center>
+              <h2>{{produto.nomeProduto}}</h2>
+              <p>{{produto.descricao}}</p>
+            </div>
+            <h2 item-end>R$ {{produto.preco}}</h2>
+          </ion-item>
+
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

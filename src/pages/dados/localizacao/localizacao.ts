@@ -2,12 +2,10 @@ import { Component, OnInit, ViewChild, ElementRef  } from '@angular/core';
 import { NavController, NavParams, ToastController } from 'ionic-angular'
 
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Session } from '../../app/services/session.service';
 
-import { HomePage } from '../home/home';
+import { HomePage } from '../../home/home';
 
 import leaflet from 'leaflet';
-import { Usuario } from '../../app/models/usuario.model';
 
 @Component({
   templateUrl: 'localizacao.html'
@@ -19,9 +17,9 @@ export class LocalizacaoPage implements OnInit{
   @ViewChild('map') mapContainer: ElementRef
   map: any
   private marker: any = leaflet.marker()
-  private dadosUsuario: object;
+  private dadosUsuario;
 
-  constructor(private navCtrl: NavController, private navParams: NavParams, private toastCtrl: ToastController, private db: AngularFirestore, private session: Session) {}
+  constructor(private navCtrl: NavController, private navParams: NavParams, private toastCtrl: ToastController, private db: AngularFirestore) {}
 
   ngOnInit() {
     this.dadosUsuario = this.navParams.get('dadosUsuario');
@@ -33,11 +31,8 @@ export class LocalizacaoPage implements OnInit{
  
   inserirDados() {
     const latlng = this.marker.getLatLng();
-    this.dadosUsuario['localizacao'] = latlng.lat + '|' + latlng.lng;
+    this.dadosUsuario.localizacao = latlng.lat + '|' + latlng.lng;
     this.db.collection('vendedores').doc(this.navParams.get('uid')).set(this.dadosUsuario);
-    let usuarioAtualizado = new Usuario(this.dadosUsuario);
-    usuarioAtualizado.uid = this.navParams.get('uid');
-    this.session.create(usuarioAtualizado);
     const toast = this.toastCtrl.create({
       message: 'Novos dados inseridos!',
       duration: 3000,

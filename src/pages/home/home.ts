@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
 import { DadosPage } from '../dados/dados';
+import { ProdutosPage } from '../produtos/produtos';
 
 @Component({
   selector: 'page-home',
@@ -13,6 +14,10 @@ export class HomePage {
 
   constructor(public navCtrl: NavController) {
 
+  }
+
+  estoque() {
+    this.navCtrl.push(ProdutosPage);
   }
 
   alterarDados() {

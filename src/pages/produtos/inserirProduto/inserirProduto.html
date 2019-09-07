@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-navbar color="danger">
+    <ion-title>Inserir Produto</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="fecharModal()">
+        <ion-icon name="arrow-down"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-row justify-content-center>
+        </ion-row>
+        <form (ngSubmit)="montarProduto()" [formGroup]="inserirProdutoFormGoup">
+          <ion-row justify-content-center>
+            <ion-item>
+              <ion-label floating>Nome do produto*: </ion-label>
+              <ion-input type="text" formControlName="nomeProduto"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label floating>Preço (R$)*: </ion-label>
+              <ion-input type="number" min="0" formControlName="preco"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label floating>Descrição: </ion-label>
+              <ion-textarea type="text" rows="3" formControlName="descricao"></ion-textarea>
+            </ion-item>
+            <ion-item>
+              <ion-label>Ativo: </ion-label>
+              <ion-toggle color="danger" formControlName="ativo"></ion-toggle>
+            </ion-item>
+            <ion-item no-lines padding-vertical>
+              <ion-label>Imagem: </ion-label>
+              <ion-input type="file" accept="image/png, image/jpeg" (change)="onFileSelected($event, inputFileImagem)" #inputFileImagem></ion-input>
+            </ion-item>
+            <img [src]="imgPreviewUrl" height="150" *ngIf="imgPreviewUrl">
+          </ion-row>
+          <ion-row padding-top text-center>
+            <ion-col>
+              <button ion-button clear type="submit" [disabled]="!inserirProdutoFormGoup.valid">Inserir</button>
+            </ion-col>
+          </ion-row>
+        </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

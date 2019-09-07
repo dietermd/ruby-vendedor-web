@@ -3,11 +3,21 @@
 </ion-header>
 
 <ion-content padding>
-
   <ion-grid>
     <ion-row>
-      <ion-col col-lg-3>
 
+      <ion-col col-12 col-md-4>
+        <ion-card (click)="estoque()">
+          <img src="https://image.flaticon.com/icons/svg/138/138226.svg" style="height: 15vh" />
+          <ion-card-content>
+            <ion-card-title text-center>
+              Produtos
+            </ion-card-title>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <ion-col col-12 col-md-4>
         <ion-card (click)="alterarDados()">
           <img src="https://image.flaticon.com/icons/svg/123/123403.svg" style="height: 15vh" />
           <ion-card-content>
@@ -16,9 +26,8 @@
             </ion-card-title>
           </ion-card-content>
         </ion-card>
-
       </ion-col>
+
     </ion-row>
   </ion-grid>
-
 </ion-content>

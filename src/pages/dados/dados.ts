@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { take } from 'rxjs/operators'
 
-import { LocalizacaoPage } from '../localizacao/localizacao';
+import { LocalizacaoPage } from './localizacao/localizacao';
 
-
-import { Session } from '../../app/services/session.service';
-import { Usuario } from '../../app/models/usuario.model';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 
 @Component({
@@ -15,11 +15,11 @@ import { Usuario } from '../../app/models/usuario.model';
 
 export class DadosPage implements OnInit {
 
-  label: string = "Dados";
-  private usuarioLogado: Usuario;
+  label: string;
+  private usuarioLogado = null;
   private dadosFormGroup: FormGroup;
 
-  constructor(private navCtrl: NavController, private navParams: NavParams, private session: Session) { }
+  constructor(private navCtrl: NavController, private navParams: NavParams, private afAuth: AngularFireAuth, private db: AngularFirestore) { }
 
   ngOnInit() {    
     this.dadosFormGroup = new FormGroup({
@@ -27,13 +27,20 @@ export class DadosPage implements OnInit {
       cnpj: new FormControl('', [Validators.required]),
       nomeEstabelecimento: new FormControl('', [Validators.required])
     });
-    this.session.get().then(res => {
-      this.usuarioLogado = new Usuario(res);
-      if(this.navParams.get('alterar')) {
-        this.nomeResponsavel.setValue(this.usuarioLogado.nomeResponsavel);
-        this.cnpj.setValue(this.usuarioLogado.cnpj);
-        this.nomeEstabelecimento.setValue(this.usuarioLogado.nomeEstabelecimento);
-      }
+    this.afAuth.user.pipe(take(1)).subscribe(user => {
+      this.db.collection('vendedores').doc(user.uid).get().pipe(take(1)).subscribe(doc => {
+        //console.log(doc.id, user.uid)
+        this.usuarioLogado = doc.data();
+        this.usuarioLogado.uid = doc.id;
+        if(this.navParams.get('alterar')) {
+          this.label = "Alterar Dados";
+          this.nomeResponsavel.setValue(this.usuarioLogado.nomeResponsavel);
+          this.cnpj.setValue(this.usuarioLogado.cnpj);
+          this.nomeEstabelecimento.setValue(this.usuarioLogado.nomeEstabelecimento);
+        } else {
+          this.label = "Inserir Dados";
+        }
+      });
     });
   }
 

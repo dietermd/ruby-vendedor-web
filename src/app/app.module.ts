@@ -9,6 +9,7 @@ import { MyApp } from './app.component';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireStorageModule } from '@angular/fire/storage';
 import { environment } from './environments/environment';
 
 import { IonicStorageModule } from '@ionic/storage';
@@ -18,10 +19,12 @@ import { HomePage } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
 import { CadastroPage } from '../pages/cadastro/cadastro';
 import { DadosPage } from '../pages/dados/dados';
-import { LocalizacaoPage } from '../pages/localizacao/localizacao';
+import { LocalizacaoPage } from '../pages/dados/localizacao/localizacao';
+import { ProdutosPage } from '../pages/produtos/produtos';
+import { InserirProdutoPage } from '../pages/produtos/inserirProduto/inserirProduto';
+import { AlterarProdutoPage } from '../pages/produtos/alterarProduto/alterarProduto';
 
 import { NavbarComponent } from '../components/navbar/navbar';
-import { NavbarPopoverPage } from '../pages/navbar-popover/navbar-popover';
 
 
 @NgModule({
@@ -32,9 +35,11 @@ import { NavbarPopoverPage } from '../pages/navbar-popover/navbar-popover';
     HomePage,
     DadosPage,
     LocalizacaoPage,
+    ProdutosPage,
+    InserirProdutoPage,
+    AlterarProdutoPage,
 
     NavbarComponent,
-    NavbarPopoverPage
   ],
   imports: [
     BrowserModule,
@@ -42,7 +47,8 @@ import { NavbarPopoverPage } from '../pages/navbar-popover/navbar-popover';
     IonicStorageModule.forRoot(),
     AngularFireModule.initializeApp(environment.FIREBASE_CONFIG),
     AngularFireAuthModule,
-    AngularFirestoreModule
+    AngularFirestoreModule,
+    AngularFireStorageModule    
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -52,8 +58,9 @@ import { NavbarPopoverPage } from '../pages/navbar-popover/navbar-popover';
     HomePage,
     DadosPage,
     LocalizacaoPage,
-
-    NavbarPopoverPage
+    ProdutosPage,
+    InserirProdutoPage,
+    AlterarProdutoPage
   ],
   providers: [
     //SplashScreen,
