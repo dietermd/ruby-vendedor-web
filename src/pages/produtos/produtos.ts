@@ -1,12 +1,10 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { ModalController } from "ionic-angular";
-import { Subscription } from "rxjs";
-
-import { AngularFirestore } from "@angular/fire/firestore";
-import { Session } from "../../app/services/session.service";
 
 import { InserirProdutoPage } from "./inserirProduto/inserirProduto";
 import { AlterarProdutoPage } from "./alterarProduto/alterarProduto";
+
+import { Queries } from "../../app/services/queries.service";
 
 
 @Component({
@@ -15,49 +13,55 @@ import { AlterarProdutoPage } from "./alterarProduto/alterarProduto";
 export class ProdutosPage implements OnInit {
 
   label: string = "Produtos";
-  listaProdutos: any[];
+  private listaProdutos: any[];
   listaFiltrada: any[];
-  private produtosSub: Subscription;
+  @ViewChild('searchBar') searchBar: ElementRef;
 
-  constructor(private modalCtrl: ModalController, private db: AngularFirestore, private session: Session) {}
+  constructor(private modalCtrl: ModalController, private queries: Queries) {}
 
-  ngOnInit() {    
-    this.session.get().then(usuario => {
-      this.produtosSub =  this.db.collection('produtos', ref => ref.where('uid', '==', usuario.uid)).snapshotChanges().subscribe(snap => {
-        this.listaFiltrada = this.listaProdutos = snap.map(doc => {
-          const id = doc.payload.doc.id;
-          const data = doc.payload.doc.data();
-          return { id, ...data };
-        });
-      });
+  ngOnInit() {
+    this.preencherLista();
+  }
+
+  private preencherLista() {
+    this.queries.obterTodosProdutos().subscribe((res: any[]) => {
+      this.listaProdutos = res;
+      this.filtrarLista();
     });
   }
 
-  filtrarLista(event: any) {
+  filtrarLista() {
     this.listaFiltrada = this.listaProdutos;
-    const val = event.target.value;
+    //const val = event.target.value;
+    const val = this.searchBar['_searchbarInput'].nativeElement.value;
     if(val && val.trim() != '') {
       this.listaFiltrada = this.listaProdutos.filter(produto => {
-        return (produto.nomeProduto.toLowerCase().indexOf(val.toLowerCase()) > -1);
+        return (produto.nome.toLowerCase().indexOf(val.toLowerCase()) > -1);
       });
     }
   }
 
   inserirProduto() {
-    this.session.get().then(usuario => {
-      const inserirProdutoModal = this.modalCtrl.create(InserirProdutoPage, {uid: usuario.uid});
+    new Promise(resolve => {
+      const inserirProdutoModal = this.modalCtrl.create(InserirProdutoPage, {uid: this.queries.obterUid(), resolve: resolve});
       inserirProdutoModal.present();
+    }).then(inseriu => {
+      if(inseriu) {
+        this.preencherLista();
+      }
+    });  
+  }
+
+  alterarProduto(produtoID: number) {
+    this.queries.obterProduto(produtoID).subscribe(res => {
+      new Promise(resolve => {
+        const alterarProdutoModal = this.modalCtrl.create(AlterarProdutoPage, {produto: res, resolve: resolve});
+        alterarProdutoModal.present();
+      }).then(alterou => {
+        if(alterou) {
+          this.preencherLista();
+        }
+      });
     });
-  }
-
-  alterarProduto(produtoID: string) {
-    this.session.get().then(usuario => {
-      const alterarProdutoModal = this.modalCtrl.create(AlterarProdutoPage, {uid: usuario.uid, produtoID: produtoID});
-      alterarProdutoModal.present();
-    });    
-  }
-
-  ionViewDidLeave() {
-    this.produtosSub.unsubscribe();
   }
 }

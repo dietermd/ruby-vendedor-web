@@ -11,9 +11,10 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { environment } from './environments/environment';
+import { HttpClientModule } from '@angular/common/http';
 
 import { IonicStorageModule } from '@ionic/storage';
-import { Session } from './services/session.service';
+import { Queries } from './services/queries.service';
 
 import { HomePage } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
@@ -48,7 +49,8 @@ import { NavbarComponent } from '../components/navbar/navbar';
     AngularFireModule.initializeApp(environment.FIREBASE_CONFIG),
     AngularFireAuthModule,
     AngularFirestoreModule,
-    AngularFireStorageModule    
+    AngularFireStorageModule,
+    HttpClientModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -65,7 +67,7 @@ import { NavbarComponent } from '../components/navbar/navbar';
   providers: [
     //SplashScreen,
     //StatusBar,
-    Session,
+    Queries,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

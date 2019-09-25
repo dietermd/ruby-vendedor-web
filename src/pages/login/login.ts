@@ -7,9 +7,7 @@ import { HomePage } from '../home/home';
 import { DadosPage } from '../dados/dados';
 
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { Session } from '../../app/services/session.service';
-import { Usuario } from '../../app/models/usuario.model';
+import { Queries } from '../../app/services/queries.service';
 
 
 @Component({
@@ -18,13 +16,9 @@ import { Usuario } from '../../app/models/usuario.model';
 export class LoginPage implements OnInit {
 
   label: string = "Login";
-  private usuario: Usuario;
   private loginFormGroup: FormGroup;
 
-  constructor(private navCtrl: NavController, private alertCtrl: AlertController, private afAuth: AngularFireAuth,
-    private db: AngularFirestore, private session: Session) {
-
-  }
+  constructor(private navCtrl: NavController, private alertCtrl: AlertController, private afAuth: AngularFireAuth, private queries: Queries) {}
 
   ngOnInit() {
     this.loginFormGroup = new FormGroup({
@@ -36,25 +30,23 @@ export class LoginPage implements OnInit {
   get senha() { return this.loginFormGroup.get('senha') }
 
   logar() {
-    this.afAuth.auth.signInWithEmailAndPassword(this.email.value, this.senha.value).then(res => {
-      this.db.collection('vendedores').doc(res.user.uid).valueChanges().subscribe(doc => {
-        this.usuario = new Usuario(doc);
-        this.usuario.uid = res.user.uid;
-        this.session.create(this.usuario);
-        if (this.usuario.dadosCadastrados()) {
+    this.afAuth.auth.signInWithEmailAndPassword(this.email.value, this.senha.value).then(authRes => {
+      this.queries.obterVendedor().subscribe(res => {
+        if (res) {
           this.navCtrl.setRoot(HomePage);
         } else {
           this.navCtrl.setRoot(DadosPage);
         }
       });
-
-    }).catch(error => {
-      const alert = this.alertCtrl.create({
-        title: 'Erro',
-        subTitle: 'Email ou senha incorretos',
-        buttons: ['OK']
-      });
-      alert.present();
+    }).catch((error) => {
+      if(error.code = 'auth/wrong-password'){
+        const alert = this.alertCtrl.create({
+          title: 'Erro',
+          subTitle: 'Email ou senha incorretos',
+          buttons: ['OK']
+        });
+        alert.present();
+      }      
     });
   }
 

@@ -5,10 +5,10 @@ export class Model {
 }
 
 export class Produto extends Model {
-  uid?: string;
-  nomeProduto?: string;
-  preco?: string;
+  id?: number
+  vendedor_uid?: string;
+  nome?: string;
+  preco?: number;
   descricao?: string;
-  ativo?: boolean;
-  imagem?: any;
+  imagem_url?: string;
 }

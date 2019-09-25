@@ -1,47 +1,38 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { take } from 'rxjs/operators'
-
-import { LocalizacaoPage } from './localizacao/localizacao';
 
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFirestore } from '@angular/fire/firestore';
-
+import { LocalizacaoPage } from './localizacao/localizacao';
+import { Usuario } from '../../app/models/usuario.model';
 
 @Component({
   templateUrl: 'dados.html'
 })
-
 export class DadosPage implements OnInit {
 
   label: string;
-  private usuarioLogado = null;
+  private dadosUsuario: Usuario;
   private dadosFormGroup: FormGroup;
 
-  constructor(private navCtrl: NavController, private navParams: NavParams, private afAuth: AngularFireAuth, private db: AngularFirestore) { }
+  constructor(private navCtrl: NavController, private navParams: NavParams, private afAuth: AngularFireAuth) { }
 
-  ngOnInit() {    
+  ngOnInit() {
     this.dadosFormGroup = new FormGroup({
       nomeResponsavel: new FormControl('', [Validators.required]),
       cnpj: new FormControl('', [Validators.required]),
       nomeEstabelecimento: new FormControl('', [Validators.required])
-    });
-    this.afAuth.user.pipe(take(1)).subscribe(user => {
-      this.db.collection('vendedores').doc(user.uid).get().pipe(take(1)).subscribe(doc => {
-        //console.log(doc.id, user.uid)
-        this.usuarioLogado = doc.data();
-        this.usuarioLogado.uid = doc.id;
-        if(this.navParams.get('alterar')) {
-          this.label = "Alterar Dados";
-          this.nomeResponsavel.setValue(this.usuarioLogado.nomeResponsavel);
-          this.cnpj.setValue(this.usuarioLogado.cnpj);
-          this.nomeEstabelecimento.setValue(this.usuarioLogado.nomeEstabelecimento);
-        } else {
-          this.label = "Inserir Dados";
-        }
-      });
-    });
+    });    
+    if (this.navParams.get('alterar')) {
+      this.dadosUsuario = new Usuario(this.navParams.get('dadosUsuario'));
+      this.label = "Alterar Dados";
+      this.nomeResponsavel.setValue(this.dadosUsuario.nome_responsavel);
+      this.cnpj.setValue(this.dadosUsuario.cnpj);
+      this.nomeEstabelecimento.setValue(this.dadosUsuario.nome_estabelecimento);      
+    } else {
+      this.label = "Inserir Dados";
+      this.dadosUsuario = new Usuario({uid: this.afAuth.auth.currentUser.uid});
+    }
   }
 
   get nomeResponsavel() { return this.dadosFormGroup.get('nomeResponsavel'); }
@@ -49,10 +40,13 @@ export class DadosPage implements OnInit {
   get nomeEstabelecimento() { return this.dadosFormGroup.get('nomeEstabelecimento') }
 
   inserirDados() {
+    this.dadosUsuario.nome_responsavel = this.nomeResponsavel.value;
+    this.dadosUsuario.nome_estabelecimento = this.nomeEstabelecimento.value;
+    this.dadosUsuario.cnpj = this.cnpj.value;
+    console.log(this.dadosUsuario);
     const dados = {
       alterar: this.navParams.get('alterar'),
-      uid: this.usuarioLogado.uid, 
-      dadosUsuario: { nomeResponsavel: this.nomeResponsavel.value, cnpj: this.cnpj.value, nomeEstabelecimento: this.nomeEstabelecimento.value, localizacao: this.usuarioLogado.localizacao }
+      dadosUsuario: this.dadosUsuario
     };
     this.navCtrl.push(LocalizacaoPage, dados);
   }

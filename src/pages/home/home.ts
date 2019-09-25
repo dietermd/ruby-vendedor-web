@@ -4,6 +4,8 @@ import { NavController } from 'ionic-angular';
 import { DadosPage } from '../dados/dados';
 import { ProdutosPage } from '../produtos/produtos';
 
+import { Queries } from '../../app/services/queries.service';
+
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
@@ -12,16 +14,16 @@ export class HomePage {
 
   label: string = "Home";
 
-  constructor(public navCtrl: NavController) {
+  constructor(private navCtrl: NavController, private queries: Queries) {}
 
-  }
-
-  estoque() {
+  estoque() {     
     this.navCtrl.push(ProdutosPage);
   }
 
   alterarDados() {
-    this.navCtrl.push(DadosPage, {alterar: true});
+    this.queries.obterVendedor().subscribe(res => {
+      this.navCtrl.push(DadosPage, { alterar: true, dadosUsuario: res });
+    });    
   }
 
 }

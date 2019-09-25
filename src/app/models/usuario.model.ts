@@ -3,16 +3,18 @@ export class Model {
         Object.assign(this, objeto);
     }
 }
+
 //classe usuario extendendo a classe Model
 export class Usuario extends Model {
+    id?: number;
     uid?: string;
-    nomeResponsavel?: string;
+    nome_responsavel?: string;
     cnpj?: string;
-    nomeEstabelecimento?: string;
-    localizacao?: string;
+    nome_estabelecimento?: string;
+    coordenada?: any;
 
     dadosCadastrados(): boolean {        
-        if(this.nomeResponsavel && this.cnpj && this.nomeEstabelecimento && this.localizacao) {
+        if(this.id && this.nome_responsavel && this.cnpj && this.nome_estabelecimento && this.coordenada) {
             return true;
         }
         return false;

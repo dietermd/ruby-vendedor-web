@@ -3,8 +3,6 @@ import { NavController, AlertController, ToastController } from 'ionic-angular'
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFirestore } from '@angular/fire/firestore';
-
 
 import { LoginPage } from '../login/login';
 
@@ -16,7 +14,7 @@ export class CadastroPage implements OnInit {
     label: string = "Cadastro";
     private cadastroFormGroup: FormGroup
 
-    constructor(private navCtrl: NavController, private alertCtrl: AlertController, private toastCtrl: ToastController, private afAuth: AngularFireAuth, private db: AngularFirestore) { }
+    constructor(private navCtrl: NavController, private alertCtrl: AlertController, private toastCtrl: ToastController, private afAuth: AngularFireAuth) { }
 
     ngOnInit() {
         let EMAIL_VALIDATION = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/
@@ -42,15 +40,15 @@ export class CadastroPage implements OnInit {
           return
         }
         this.afAuth.auth.createUserWithEmailAndPassword(this.email.value, this.senha.value).then(res => {
-          this.db.collection('vendedores').doc(res.user.uid).set({});
+          //this.db.collection('vendedores').doc(res.user.uid).set({});
           const toast = this.toastCtrl.create({
             message: 'Usuário cadastrado com sucesso!',
             duration: 3000,
             position: 'top'
           });
           toast.present();
+          this.afAuth.auth.signOut();
           this.navCtrl.setRoot(LoginPage);
-
         }).catch(error => {
             if(error.code === 'auth/email-already-in-use') {
               const alert = this.alertCtrl.create({
