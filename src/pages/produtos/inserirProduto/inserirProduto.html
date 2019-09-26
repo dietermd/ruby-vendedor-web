@@ -31,13 +31,16 @@
             </ion-item>
             <ion-item no-lines padding-vertical>
               <ion-label>Imagem: </ion-label>
-              <ion-input type="file" accept="image/png, image/jpeg" (change)="onFileSelected($event, inputFileImagem)" #inputFileImagem></ion-input>
+              <ion-input type="file" accept="image/png, image/jpeg" (change)="onFileSelected($event, inputFileImagem)" #inputFileImagem></ion-input>              
             </ion-item>
-            <img [src]="imgPreviewUrl" height="150" *ngIf="imgPreviewUrl">
+              <img [src]="imgPreviewUrl" height="150" *ngIf="imgPreviewUrl">
+              <button ion-button clear type="button" color="danger" *ngIf="imgPreviewUrl" (click)="removerImagem(inputFileImagem)">
+                  <ion-icon name="close-circle"></ion-icon>
+              </button>
           </ion-row>
           <ion-row padding-top text-center>
-            <ion-col>
-              <button ion-button clear type="submit" [disabled]="!inserirProdutoFormGoup.valid">Inserir</button>
+            <ion-col>              
+              <button ion-button clear type="submit" [disabled]="!inserirProdutoFormGoup.valid">Inserir Produto</button>
             </ion-col>
           </ion-row>
         </form>

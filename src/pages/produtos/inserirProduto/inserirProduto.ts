@@ -35,16 +35,9 @@ export class InserirProdutoPage implements OnInit {
     const files = event.target.files;
     files.length > 0 ? this.imagem = files[0] : this.imagem = null;
     if(this.imagem) {
-      if (this.imagem.type.match(/image\/(png|jfif|pjpeg|jpeg|pjp|jpg)/) == null) {
-        this.imagem = null;
-        inputFileImagem.value = null;
-        this.imgPreviewUrl = null;
-        const toast = this.toastCtrl.create({
-          message: 'Apenas imagens são permitidas.',
-          duration: 3000,
-          position: 'top'
-        });
-        toast.present();
+      if (this.imagem.type.match(/image\/(png|jfif|pjpeg|jpeg|pjp|jpg)/) === null) {
+        inputFileImagem.value = this.imgPreviewUrl = this.imagem = null;
+        this.toastCtrl.create({ message: 'Apenas imagens são permitidas.', duration: 3000, position: 'top' }).present();
         return;
       }
       const reader = new FileReader();
@@ -52,7 +45,13 @@ export class InserirProdutoPage implements OnInit {
       reader.onload = (_event) => {
         this.imgPreviewUrl = reader.result;
       }
+    } else {
+      this.imgPreviewUrl = null;
     }
+  }
+
+  removerImagem(inputFileImagem: HTMLInputElement) {
+    inputFileImagem.value = this.imgPreviewUrl = this.imagem = null;
   }
 
   montarProduto() {

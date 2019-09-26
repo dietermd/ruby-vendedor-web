@@ -44,15 +44,8 @@ export class AlterarProdutoPage implements OnInit {
     files.length > 0 ? this.imagem = files[0] : this.imagem = null;
     if (this.imagem) {
       if (this.imagem.type.match(/image\/(png|jfif|pjpeg|jpeg|pjp|jpg)/) == null) {
-        this.imagem = null;
-        inputFileImagem.value = null;       
-        this.imgPreviewUrl = null;
-        const toast = this.toastCtrl.create({
-          message: 'Apenas imagens são permitidas.',
-          duration: 3000,
-          position: 'top'
-        });
-        toast.present();
+        this.imagem = inputFileImagem.value = this.imgPreviewUrl = null;
+        this.toastCtrl.create({ message: 'Apenas imagens são permitidas.', duration: 3000, position: 'top' }).present();
         return;
       }      
       const reader = new FileReader();
@@ -60,7 +53,13 @@ export class AlterarProdutoPage implements OnInit {
       reader.onload = (_event) => {
         this.imgPreviewUrl = reader.result;
       }
+    } else {
+      this.imgPreviewUrl = null;
     }
+  }
+
+  removerImagem(inputFileImagem: HTMLInputElement) {
+    inputFileImagem.value = this.imgPreviewUrl = this.imagem = null;
   }
 
   montarProduto() {
@@ -70,7 +69,7 @@ export class AlterarProdutoPage implements OnInit {
       nome: this.nomeProduto.value,
       preco: this.preco.value,
       descricao: this.descricao.value,
-      imagem: null
+      imagem_url: this.produto.imagem_url
     });
     if (this.imagem) {
       if (this.produto.imagem_url) {
@@ -81,11 +80,14 @@ export class AlterarProdutoPage implements OnInit {
       storageRef.put(this.imagem).then(() => {
         storageRef.getDownloadURL().subscribe(url => {
           produtoAlterado.imagem_url = url;
-          console.log(produtoAlterado);
           this.alterarProduto(produtoAlterado);
         });
       });
     } else {
+      if (this.produto.imagem_url && !this.imgPreviewUrl) {
+        this.storage.storage.refFromURL(this.produto.imagem_url).delete();
+        produtoAlterado.imagem_url = null;
+      } 
       this.alterarProduto(produtoAlterado);
     }
   }
