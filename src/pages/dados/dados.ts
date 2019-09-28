@@ -21,14 +21,16 @@ export class DadosPage implements OnInit {
     this.dadosFormGroup = new FormGroup({
       nomeResponsavel: new FormControl('', [Validators.required]),
       cnpj: new FormControl('', [Validators.required]),
-      nomeEstabelecimento: new FormControl('', [Validators.required])
+      nomeEstabelecimento: new FormControl('', [Validators.required]),
+      descricao: new FormControl('')
     });    
     if (this.navParams.get('alterar')) {
       this.dadosUsuario = new Usuario(this.navParams.get('dadosUsuario'));
       this.label = "Alterar Dados";
       this.nomeResponsavel.setValue(this.dadosUsuario.nome_responsavel);
       this.cnpj.setValue(this.dadosUsuario.cnpj);
-      this.nomeEstabelecimento.setValue(this.dadosUsuario.nome_estabelecimento);      
+      this.nomeEstabelecimento.setValue(this.dadosUsuario.nome_estabelecimento);
+      this.descricao.setValue(this.dadosUsuario.descricao);     
     } else {
       this.label = "Inserir Dados";
       this.dadosUsuario = new Usuario({uid: this.afAuth.auth.currentUser.uid});
@@ -38,11 +40,13 @@ export class DadosPage implements OnInit {
   get nomeResponsavel() { return this.dadosFormGroup.get('nomeResponsavel'); }
   get cnpj() { return this.dadosFormGroup.get('cnpj'); }
   get nomeEstabelecimento() { return this.dadosFormGroup.get('nomeEstabelecimento') }
+  get descricao() { return this.dadosFormGroup.get('descricao') }
 
   inserirDados() {
     this.dadosUsuario.nome_responsavel = this.nomeResponsavel.value;
     this.dadosUsuario.nome_estabelecimento = this.nomeEstabelecimento.value;
     this.dadosUsuario.cnpj = this.cnpj.value;
+    this.dadosUsuario.descricao = this.descricao.value;
     console.log(this.dadosUsuario);
     const dados = {
       alterar: this.navParams.get('alterar'),

@@ -6,7 +6,7 @@
   <ion-grid>
     <ion-row align-items-center>
       <ion-col col-10 col-sm-11>
-        <ion-searchbar #searchBar (ionInput)="filtrarLista()"></ion-searchbar>
+        <ion-searchbar #searchBar placeholder="Buscar" (ionInput)="filtrarLista()"></ion-searchbar>
       </ion-col>
       <ion-col col-2 col-sm-1>
         <button ion-button icon-only full color="danger" style="height: 42px" (click)="inserirProduto()">

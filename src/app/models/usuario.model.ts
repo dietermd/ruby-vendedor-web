@@ -12,6 +12,7 @@ export class Usuario extends Model {
     cnpj?: string;
     nome_estabelecimento?: string;
     coordenada?: any;
+    descricao?: string;
 
     dadosCadastrados(): boolean {        
         if(this.id && this.nome_responsavel && this.cnpj && this.nome_estabelecimento && this.coordenada) {
